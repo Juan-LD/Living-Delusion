@@ -1,5 +1,5 @@
-DOTHAT = gcc -c -O2 -Wall -Wextra
-MOVE = move /Y *.o ..
+DOTHAT = gcc -c -O2 -Wall -Wextra -fPIC
+MOVE = mv -f *.o ..
 
 full:
 	$(DOTHAT) *.c
@@ -41,4 +41,4 @@ move:
 	$(MOVE)
 
 clean:
-	del /s *.o
+	rm -f *.o

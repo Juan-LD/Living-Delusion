@@ -78,7 +78,7 @@ i64 IntInp(void){
             }
         }
 
-        atoiReturn = atoi(Input);
+        atoiReturn = strtol(Input, NULL, 10);
         if(isZero)
             atoiReturn ++;
 
@@ -100,7 +100,8 @@ bool RunThisAtStart(void){
     bool pathPreviouslyExist = false;
      
     //set up \x1b (windows only cuz windows big stupid)
-    if(OS_NAME[0] == 'W'){
+    #if defined(_WIN32) || defined(_WIN64)
+
         //Stolen from somewhere (i forgor)
         HANDLE handleOut = GetStdHandle(STD_OUTPUT_HANDLE);
         DWORD consoleMode;
@@ -108,32 +109,29 @@ bool RunThisAtStart(void){
         consoleMode |= 0x0004;
         consoleMode |= 0x0008;            
         SetConsoleMode( handleOut , consoleMode );
-    }
 
+    #endif
+        
     //get paths and also get the return value to determin if its a new player or a reset
     pathPreviouslyExist = GetNeededPaths();
-    
+
     //Some debug info
     if(DEBUG_MODE){
         printf("[DEBUG] _> OS Detected? ");
+    
+        #if __linux__
+            printf("Linux\n");
 
-        switch(OS_NAME[0]){
-            case 'W':
-                printf("Windows\n");
-                break;
+        #elif  defined(_WIN32) || defined(_WIN64)
+            printf("Windows\n");
 
-            case 'L':
-                printf("Linux\n");
-                break;
+        #elif defined(__APPLE__) || defined(__MACH__)
+            printf("Apple\n");
 
-            case 'A':
-                printf("Apple\n");
-                break;
+        #else
+            printf("Unknown / not suported, maybe misspelled it\n");
 
-            default:
-                printf("Unknown / not suported, maybe misspelled it\n");
-                break;
-        }
+        #endif
 
         printf("[DEBUG]_> \x1b[31mFOREGROUND Red Color test\x1b[0m\n");
         printf("[DEBUG]_> \x1b[41mBACKGROUND Red Color test\x1b[0m\n");
@@ -170,15 +168,24 @@ void ExitEarly(u16 errCode, char * errMsg){
     //on logs -> (dd/mm/yyyy | hh:mm:ss) - 203, "Error happend!"
     
     chdir(LOCAL_PATH);
-    char temp [25] = { '\0' };
-    char date [25] = { '\0' }, fileTime [25] = { '\0' };
+    //char temp [25] = { '\0' };
+    //char date [25] = { '\0' }, fileTime [25] = { '\0' };
 
     //Open time struct
     time_t now = time(NULL);
     struct tm *tm_struct = localtime(&now);
 
+    char fileTime[50]; // HH:MM:SS format
+    char date[50];    // DD/MM/YYYY format
+
+    // Format time as HH:MM:SS
+    sprintf(fileTime, "%02d:%02d:%02d", tm_struct->tm_hour, tm_struct->tm_min, tm_struct->tm_sec);
+
+    // Format date as DD/MM/YYYY
+    sprintf(date, "%02d/%02d/%04d", tm_struct->tm_mday, tm_struct->tm_mon + 1, tm_struct->tm_year + 1900);
+
     //Get time
-    itoa(tm_struct->tm_hour, temp, 10);
+    /*itoa(tm_struct->tm_hour, temp, 10);
     strcpy(fileTime, temp);
     strcat(fileTime, ":");
     memset(temp, '\0', sizeof(temp));
@@ -201,7 +208,7 @@ void ExitEarly(u16 errCode, char * errMsg){
     memset(temp, '\0', sizeof(temp));
     itoa(tm_struct->tm_year + 1900 , temp, 10);
     strcat(date, temp);
-    memset(temp, '\0', sizeof(temp));
+    memset(temp, '\0', sizeof(temp));*/
 
     //No need for error handling, its gonna crash soon anyways...
     FILE * fLogs = fopen("logs.txt", "a");

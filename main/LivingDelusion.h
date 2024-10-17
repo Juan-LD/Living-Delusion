@@ -36,43 +36,14 @@
                         CLR;
 
 #else
-    #define PATH_MAX_LEN 4096
+#define PATH_MAX_LEN 4096
     #define CLR system("clear");
 
     #include <termios.h>
-
-    //STOLEN FROM: https://stackoverflow.com/questions/7469139/what-is-the-equivalent-to-getch-getche-in-linux/7469410#7469410
-    void initTermios(int echo) 
-    {
-        tcgetattr(0, &old);
-        current = old; 
-        current.c_lflag &= ~ICANON; 
-        if (echo) {
-            current.c_lflag |= ECHO; 
-        } else {
-            current.c_lflag &= ~ECHO; 
-        }
-        tcsetattr(0, TCSANOW, &current); 
-    }
-
-    void resetTermios(void) 
-    {
-        tcsetattr(0, TCSANOW, &old);
-    }
-
-    char getch_(int echo) 
-    {
-        char ch;
-        initTermios(echo);
-        ch = getchar();
-        resetTermios();
-        return ch;
-    }
-
-    char getch(void) 
-    {
-        return getch_(0);
-    }
+    #include <ctype.h>
+    
+    //Defined in LivingDelusion.c
+    void getch(void);
 
     //SURELY IT WORKS
     #define SmallStop   printf("[SYSTEM] _> Press anything to continue\n"); \
@@ -81,6 +52,7 @@
     //Linux specifics
     #ifdef __linux__
         #include <linux/limits.h>
+        #include <sys/ioctl.h>
 
     //Apple specifics
     #elif defined(__APPLE__) || defined(__MACH__)
@@ -109,23 +81,6 @@
                 CLR;
 
 #define SafeFree(p) SaferFree((void **)&(p));   //function pointers are scary! (also stolen from "Using and Understanding C Pointers")
-                                
-//VERY temporary thing
-#define dark_blue     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 1);
-#define green          SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 2);
-#define light_blue     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 3);
-#define red        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 4);
-#define purple         SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 5);
-#define yellow         SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 6);
-#define white          SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
-#define gray       SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 8);
-#define mid_blue   SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 9);
-#define light_green    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
-#define light_aqua     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 11);
-#define light_red  SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
-#define light_purple SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 13);
-#define light_yellow SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 14);
-#define  bright_white SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
 
 //typedefs go here (YES I STOLE THESE TYPEDEFS!)
 typedef int8_t      i8;         //From (-128 to 127)

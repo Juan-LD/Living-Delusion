@@ -74,7 +74,7 @@ u32 Art(const char * callerTopic, u8 typeWanted, ArtOptions * ArtModifiers){
 
         char * safeLine = strtok(artLine, "|/");
 
-        //printf("artContext ->%s\n", artContext);
+        printf("artContext ->%s\n", artContext);
 
         if(safeLine == NULL)
             printf("%s", artLine);        

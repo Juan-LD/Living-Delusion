@@ -1,38 +1,43 @@
 #include "../LivingDelusion.h"
 
-//Used to get cur Terminal Size information (not mine, found here: https://stackoverflow.com/questions/6812224/getting-terminal-size-in-c-for-windows/12642749#12642749)
+/*
+ * #if __linux__
+ *
+ * #elif  defined(_WIN32) || defined(_WIN64)
+ *
+ * #else
+ *
+ * #endif
+ */
+
+//Used to get cur Terminal Size information
 u64 GetTerminalSize(const char * what){
 
     u64 columns = 0, rows = 0;
 
-    switch(OS_NANE[0]){
-        case 'L': {
-                      struct winsize w;
-                      ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+    #if __linux__
 
-                      columns = (u64)w.ws_col;
-                      rows = (u64)w.ws_row;
+        //Found in: https://stackoverflow.com/questions/1022957/getting-terminal-width-in-c
+        struct winsize w;
+        ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
 
-                      break;
-                  }
+        columns = (u64)w.ws_col;
+        rows = (u64)w.ws_row;
 
-        case 'W': {
-                      CONSOLE_SCREEN_BUFFER_INFO csbi;
-                      int columns, rows;
 
-                      GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
-                      columns = csbi.srWindow.Right - csbi.srWindow.Left + 1;
-                      rows = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
+    #elif  defined(_WIN32) || defined(_WIN64)
+    
+        //Found in: https://stackoverflow.com/questions/6812224/getting-terminal-size-in-c-for-windows/12642749#1264
+        CONSOLE_SCREEN_BUFFER_INFO csbi;
+        int columns, rows;
 
-                      break;
-                  }
+        GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
+        columns = csbi.srWindow.Right - csbi.srWindow.Left + 1;
+        rows = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
 
-        case 'A': {
+    #else
 
-                      break;
-                  }
-    }
-
+    #endif
 
     if(strcmp(what, "columns")== 0)
         return columns;

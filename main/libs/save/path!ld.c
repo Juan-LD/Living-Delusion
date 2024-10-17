@@ -79,89 +79,88 @@ bool GetNeededPaths(void){
     path tempPath;
     memset(tempPath, '\0', PATH_MAX_LEN);    
 
-    //Getting LOCAL_PATH and FULL_PATH
-    switch(OS_NAME[0]){
-        case 'L':
-            break;
+    //Getting LOCAL_PATH and FULL_PATH (+error handling and making app data)
+    #if __linux__
+        printf("Linux\n");
 
-        case 'W': {
+    #elif  defined(_WIN32) || defined(_WIN64)
+        //Checking if LOCALAPPDATA is real or not
+        const char *md = "LOCALAPPDATA";
+        char * getEnvVar = getenv(md);
+        strcpy(LOCAL_PATH, getEnvVar);
 
-                //Checking if LOCALAPPDATA is real or not
-                const char *md = "LOCALAPPDATA";
-                char * getEnvVar = getenv(md);
-                strcpy(LOCAL_PATH, getEnvVar);
+        chdir(LOCAL_PATH);
+        strcat(LOCAL_PATH, "\\LIVING_DELUSION");
 
-                chdir(LOCAL_PATH);
-                strcat(LOCAL_PATH, "\\LIVING_DELUSION");
+        //Local path does not exist
+        if(!ExistDiret(LOCAL_PATH)){
+            chdir(STARTING_PATH);
 
-                //Local path does not exist
-                if(!ExistDiret(LOCAL_PATH)){
-                    chdir(STARTING_PATH);
+            strcpy(tempPath, STARTING_PATH);
+            strcat(tempPath, "\\NEEDED");
 
-                    strcpy(tempPath, STARTING_PATH);
-                    strcat(tempPath, "\\NEEDED");
+            //This means that LOCAL path does NOT exist and theres no replacement (NEEDED/), so show error
+            if(!ExistDiret(tempPath))
+                ExitEarly(002, "Local path missing and did NOT find replacement. (STARTUP ERR.)");
 
-                    //This means that LOCAL path does NOT exist and theres no replacement (NEEDED/), so show error
-                    if(!ExistDiret(tempPath))
-                        ExitEarly(002, "Local path missing and did NOT find replacement. (STARTUP ERR.)");
-                    
-                    //If it exists, we do the operations needed to move it back to LOCALAPPDATA
-                    system("move NEEDED %LOCALAPPDATA%");
+            //If it exists, we do the operations needed to move it back to LOCALAPPDATA
+            system("move NEEDED %LOCALAPPDATA%");
 
-                    LOCAL_PATH[strlen(LOCAL_PATH) - 16] = '\0';
-                    chdir(LOCAL_PATH);
+            LOCAL_PATH[strlen(LOCAL_PATH) - 16] = '\0';
+            chdir(LOCAL_PATH);
 
-                    system("rename NEEDED LIVING_DELUSION");
+            system("rename NEEDED LIVING_DELUSION");
 
-                    strcat(LOCAL_PATH, "\\LIVING_DELUSION");
+            strcat(LOCAL_PATH, "\\LIVING_DELUSION");
 
-                    returnWhat = false;
+            returnWhat = false;
 
-                } else {
-                    //See if path.txt exists
-                    chdir(LOCAL_PATH);
-                    chdir("extern");
+        } else {
+            //See if path.txt exists
+            chdir(LOCAL_PATH);
+            chdir("extern");
 
-                    //path.txt exists
-                    if(access("path.txt", F_OK) == 0){
-                        FILE * fGetAppPath = fopen("path.txt", "r");
-                        fgets(tempPath, PATH_MAX_LEN, fGetAppPath);
-                        fclose(fGetAppPath);
+            //path.txt exists
+            if(access("path.txt", F_OK) == 0){
+                FILE * fGetAppPath = fopen("path.txt", "r");
+                fgets(tempPath, PATH_MAX_LEN, fGetAppPath);
+                fclose(fGetAppPath);
 
-                        //user defined APPDATA does not exist
-                        if(!ExistDiret(tempPath))
-                            ExitEarly(003, "User defined APPDATA path does not exist. (STARTUP ERR.)");
+                //user defined APPDATA does not exist
+                if(!ExistDiret(tempPath))
+                    ExitEarly(003, "User defined APPDATA path does not exist. (STARTUP ERR.)");
 
-                        strcpy(FULL_PATH, tempPath);
-                        alreadyDefinedFp = true;
-                    }
-                }
+                strcpy(FULL_PATH, tempPath);
+                alreadyDefinedFp = true;
+            }
+        }
 
-                //Define FULL_PATH if its not already defined by LOCAL_PATH/extern/path.txt
-                if(!alreadyDefinedFp){
-                    memset(tempPath, '\0', PATH_MAX_LEN);
-                        
-                    const char *newMd = "APPDATA";
-                    char * getEnvVarFULL = getenv(newMd);
-                    strcpy(FULL_PATH, getEnvVarFULL);
+        //Define FULL_PATH if its not already defined by LOCAL_PATH/extern/path.txt
+        if(!alreadyDefinedFp){
+            memset(tempPath, '\0', PATH_MAX_LEN);
 
-                    //LOCAL PATH does not exist :(
-                    if(!ExistDiret(FULL_PATH)){
-                        mkdir("LIVING_DELUSION");
-                        chdir("LIVING_DELUSION");
-                        mkdir(".out");
-                    }
+            const char *newMd = "APPDATA";
+            char * getEnvVarFULL = getenv(newMd);
+            strcpy(FULL_PATH, getEnvVarFULL);
 
-                    strcat(FULL_PATH, "\\LIVING_DELUSION");
-                    chdir(FULL_PATH);
-                }
-
-                break;
+            //LOCAL PATH does not exist :(
+            if(!ExistDiret(FULL_PATH)){
+                mkdir("LIVING_DELUSION");
+                chdir("LIVING_DELUSION");
+                mkdir(".out");
             }
 
-        case 'A':
-            break;
-    }
+            strcat(FULL_PATH, "\\LIVING_DELUSION");
+            chdir(FULL_PATH);
+        }
+
+    #elif defined(__APPLE__) || defined(__MACH__)
+        printf("Apple\n");
+
+    #else
+        printf("Unknown / not suported, maybe misspelled it\n");
+
+    #endif
 
     return returnWhat;
 }

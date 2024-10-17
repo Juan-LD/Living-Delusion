@@ -260,12 +260,12 @@ u8 Animal(bool isTutorial){
                 }
 
                 if(inv_animalAction){
-                    red;
+                    //red;
                     CLR;
                     printf("Wrong place\n");
                     sleep(1);
                     CLR;
-                    white;
+                    //white;
                 }
             }
 
@@ -287,13 +287,13 @@ u8 Animal(bool isTutorial){
                 moves_taken = 0;
                 path = 0;
 
-                green;
+                //green;
                 if(isPit)
                     printf("Changed to Pit!\n");
 
                 else
                     printf("Changed to Not Pit!\n");
-                white;
+                //white;
 
             } else if(strcmp(Input, "game")== 0 && isTutorial){
                 changedGameSet = true;
@@ -304,9 +304,9 @@ u8 Animal(bool isTutorial){
                 else
                     strcpy(tutGameSet, "Int");
 
-                green;
+                //green;
                 printf("Changed game type!\n");
-                white;
+                //white;
 
             } else if(strcmp(Input, "leave")== 0 || strcmp(Input, "back")== 0){
 
@@ -340,12 +340,12 @@ u8 Animal(bool isTutorial){
                     lureRemove = true;
 
                 else {
-                    red;
+                    //red;
                     CLR;
                     printf("Wrong place\n");
                     sleep(1);
                     CLR;
-                    white;
+                    //white;
                 }
             }
 
@@ -365,13 +365,13 @@ u8 Animal(bool isTutorial){
                 moves_taken = 0;
                 path = 0;
 
-                green;
+                //green;
                 if(isPit)
                     printf("Changed to Pit!\n");
 
                 else
                     printf("Changed to Not Pit!\n");
-                white;
+                //white;
 
             } else if(strcmp(Input, "8")== 0 && isTutorial){
                 changedGameSet = true;
@@ -382,9 +382,9 @@ u8 Animal(bool isTutorial){
                 else
                     strcpy(tutGameSet, "Int");
 
-                green;
+                //green;
                 printf("Changed game type!\n");
-                white;
+                //white;
 
             } else if(strcmp(Input, "9")== 0){
 
@@ -495,9 +495,9 @@ u8 Animal(bool isTutorial){
                 lurePlaced = false;
                 lureInterest = false;
             } else {
-                red;
+                //red;
                 printf("You cannot remove the seed / lure since you are not standing on top of it.\n");
-                white;
+                //white;
             }
 
         }
@@ -526,22 +526,22 @@ u8 Animal(bool isTutorial){
                         //Sucess putting the animal on a lead!
                         animalLead = true;
                         moves_taken = 0;
-                        yellow;
+                        //yellow;
                         printf("You got the animal on lead.\n");
-                        white;
+                        //white;
 
                     } else {
                         //Failed putting the animal on a lead
-                        red;
+                        //red;
                         printf("You couldnt put a lead on the animal.\n");
-                        white;
+                        //white;
 
                     }
 
                 } else {
-                    red;
+                    //red;
                     printf("Too far from animal to put a lead on it.\n");
-                    white;
+                    //white;
                 }
 
             } else {
@@ -559,9 +559,9 @@ u8 Animal(bool isTutorial){
                     }
 
                 } else {
-                    red;
+                    //red;
                     printf("You cannot place annother seed down.\n");
-                    white;
+                    //white;
 
                 }
             }
@@ -575,9 +575,9 @@ u8 Animal(bool isTutorial){
                 //Too much walking
                 animalMove = false;
                 animalLead = false;
-                red;
+                //red;
                 printf("The animal escaped the lead!\n");
-                white;
+                //white;
                 moves_taken = 0;
                 times_ran_away ++;
 
@@ -904,22 +904,22 @@ u8 Animal(bool isTutorial){
 
         //Animal lost patience and went away
         if(patience_limit_reached == 3 || times_ran_away == ran_away_limit){
-            red;
+            //red;
             if(!isPit)
                 printf("The animal decided to run away!\n");
 
             else
                 printf("The animal lost patience and went away!\n");
-            white;
+            //white;
 
             leave = true; break;
         }
 
         //When animal patience runs out he loses interest in the seed / lure
         if(patience == patience_limit){
-            red;
+            //red;
             printf("The animal lost interest in the lure!\n");
-            white;
+            //white;
 
             lureInterest = false;
             animalMove = false;
@@ -938,9 +938,9 @@ u8 Animal(bool isTutorial){
             if(isPit)
                 printf("[WHY ARE YOU HERE] _> How the fuck?\n");
 
-            yellow;
+            //yellow;
             printf("You put the animal back in the stable!\n");
-            white;
+            //white;
 
             end = true;
         }
@@ -951,9 +951,9 @@ u8 Animal(bool isTutorial){
             if(!isPit)
                 printf("[WHY ARE YOU HERE] _> How the fuck?\n");
 
-            yellow;
+            //yellow;
             printf("The animal trust you and you took it with you!\n");
-            white;
+            //white;
 
             end = true;
         }
@@ -1072,9 +1072,9 @@ u8 Animal(bool isTutorial){
             hint[strlen(hint) - 1] = '\0';
 
             //Display hint
-            yellow;
+            //yellow;
             CenterText("KEY 3 HINT");
-            white;
+            //white;
             CenterText(hint);
             CenterText("[HELP] _> Hint has been registered in the book");
 

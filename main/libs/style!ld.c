@@ -50,7 +50,7 @@ u8 FormatText(Format * extraArgs){
             //Center and Mid
             case 0:
             case 2:                
-                printf("%*s", (((GetTerminalSize("columns") - finalStrlen) / 2) + finalStrlen) + extraArgs->displaceX, extraArgs->msg);
+                printf("%*s", (i32)(((GetTerminalSize("columns") - finalStrlen) / 2) + finalStrlen) + extraArgs->displaceX, extraArgs->msg);
                 break;
 
                 //Right
@@ -60,7 +60,7 @@ u8 FormatText(Format * extraArgs){
 
                 //Rand
             case 3:
-                printf("%*s", extraArgs->displaceX, extraArgs->msg);
+                printf("%*s", (i32)extraArgs->displaceX, extraArgs->msg);
                 break;
 
             //Return error (no mode given)
@@ -84,7 +84,7 @@ u8 FormatText(Format * extraArgs){
 //Center texts thats passed through the parameter
 void CenterText(const char * line){
     u16 actualStrlen = strlen(line) + GetStrlenOfANSI(line);
-    printf("%*s\n", ((GetTerminalSize("columns") - actualStrlen) / 2) + actualStrlen, line);
+    printf("%*s\n", (i32)((GetTerminalSize("columns") - actualStrlen) / 2) + actualStrlen, line);
     return;
 }
 
@@ -101,7 +101,7 @@ void MidScreenText(const char * line){
         printf("\n");
 
     u16 actualStrlen = strlen(line) + GetStrlenOfANSI(line);
-    printf("%*s\n", ((GetTerminalSize("columns") - actualStrlen) / 2) + actualStrlen, line);
+    printf("%*s\n", (i32)((GetTerminalSize("columns") - actualStrlen) / 2) + actualStrlen, line);
     return;
 }
 

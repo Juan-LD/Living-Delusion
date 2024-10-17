@@ -1,10 +1,10 @@
 CC = gcc
-FLAGS = -c -O2 -lstdc++ -Wall -Wextra
-LIB = -L. -lLD_LIB
+FLAGS = -c -O2 -lstdc++ -Wall -Wextra -fPIC
+LIB = -L. -l:LD_LIB.so
 
 run: LD.c
 	$(MAKE) -C . link 
-	.\LD -d -i
+	./LD -d -i
 
 link: LD.c
 	$(CC) $(FLAGS) LD.c 
@@ -12,7 +12,7 @@ link: LD.c
 
 obj: LivingDelusion.c
 	$(CC) $(FLAGS) LivingDelusion.c
-	move /Y LivingDelusion.o libs/
+	mv -f LivingDelusion.o libs/
 
 obj-dll:
 	$(MAKE) -C . obj
@@ -21,7 +21,7 @@ obj-dll:
 test: LDtest.c
 	$(CC) $(FLAGS) LDtest.c
 	$(CC) LDtest.o -o LDtest $(LIB)	
-	.\LDtest
+	./LDtest
 
 test-that:
 	$(MAKE) -C libs/art/ ascii
@@ -30,4 +30,4 @@ test-that:
 	$(MAKE) test
 
 clean:
-	del /q *.o 
+	rm -f *.o 

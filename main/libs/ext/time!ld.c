@@ -190,7 +190,7 @@ void TimeUpdate(i32 h, i64 d){
 
         expired = false;
         char fileName [6] = { '\0' };
-        itoa(i, fileName, 10);
+        sprintf(fileName, "%d", i);
         strcat(fileName, ".txt");
 
         //Update all files that include active pots

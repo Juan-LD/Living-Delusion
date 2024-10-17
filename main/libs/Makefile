@@ -1,7 +1,7 @@
-DOTHAT = gcc -c -O2 -Wall -Wextra
+DOTHAT = gcc -c -O2 -Wall -Wextra -fPIC
 FILE = $(MAKE) -C
-LINK = gcc -shared -o LD_LIB.dll *.o
-MOVE = move /Y LD_LIB.dll ..
+LINK = gcc -shared -o LD_LIB.so *.o
+MOVE = mv -f LD_LIB.so ..
 
 run:
 	$(DOTHAT) *.c	
@@ -10,7 +10,6 @@ run:
 	$(FILE) games full
 	$(FILE) local full
 	$(FILE) nina full
-	$(FILE) os full
 	$(FILE) save full
 	$(FILE) .. obj
 	$(LINK)
@@ -34,11 +33,11 @@ local:
 nina: nina!ld.c
 	$(FILE) nina full
 
-os:
-	$(FILE) os full
+os: osmanip!ld.c
+	$(DOTHAT) osmanip!ld.c
 
-osmanip:
-	$(FILE) os full
+osmanip: osmanip!ld.c
+	$(DOTHAT) osmanip!ld.c
 
 save:
 	$(FILE) save full
@@ -60,4 +59,4 @@ move:
 	$(MOVE)
 
 clean:
-	del /s *.o
+	rm -f *.o
